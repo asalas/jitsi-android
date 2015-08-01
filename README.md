@@ -48,3 +48,5 @@ Before making any pull requests please see: https://jitsi.org/Documentation/FAQ#
 [Android SDK]: http://developer.android.com/sdk/index.html
 [IntelliJ]: http://www.jetbrains.com/idea/download/
 [Jitsi for desktop]: https://github.com/jitsi/jitsi
+
+## NOW IS DEVELOPED BY ANTONINO SALAS LOPEZ
