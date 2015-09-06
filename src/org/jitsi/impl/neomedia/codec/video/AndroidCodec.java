@@ -168,7 +168,7 @@ abstract class AndroidCodec
         {
             codec = MediaCodec.createByCodecName(codecInfo.getName());
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             logger.error(e, e);
 

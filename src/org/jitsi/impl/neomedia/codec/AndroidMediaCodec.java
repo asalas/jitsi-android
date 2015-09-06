@@ -1044,7 +1044,7 @@ public class AndroidMediaCodec
             {
                 mediaCodec = MediaCodec.createByCodecName(codecInfo.getName());
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 logger.error(e, e);
             }

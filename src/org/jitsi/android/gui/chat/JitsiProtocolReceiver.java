@@ -43,7 +43,7 @@ public class JitsiProtocolReceiver
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        logger.info("Jitsi protocol intent received " + intent);
+        logger.info("ConsoleVoIPMedia protocol intent received " + intent);
 
         String urlStr = intent.getDataString();
         if(urlStr != null)
@@ -60,7 +60,7 @@ public class JitsiProtocolReceiver
         }
         else
         {
-            logger.warn("No URL supplied in Jitsi link");
+            logger.warn("No URL supplied in ConsoleVoIPMedia link");
         }
 
         finish();

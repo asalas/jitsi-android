@@ -66,7 +66,7 @@ public class VersionServiceImpl
                 = (VersionImpl) parseVersionString(versionName);
 
             logger.info(
-                "Jitsi version: " + CURRENT_VERSION
+                "ConsoleVoIPMedia version: " + CURRENT_VERSION
                     + ", version code: " + versionCode);
         }
         catch (PackageManager.NameNotFoundException e)

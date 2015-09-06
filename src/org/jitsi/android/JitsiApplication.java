@@ -24,6 +24,8 @@ import android.content.res.*;
 import android.hardware.*;
 import android.media.*;
 import android.os.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.util.*;
@@ -91,6 +93,8 @@ public class JitsiApplication
      * This monitor is notified each time current <tt>Activity</tt> changes.
      */
     private static final Object currentActivityMonitor = new Object();
+    
+    private static Map<String, Object> subscriberConsoleMap = new HashMap<String, Object>();
 
     /**
      * {@inheritDoc}
@@ -426,4 +430,14 @@ public class JitsiApplication
                 getResString(R.string.service_gui_SEND_LOGS_SUBJECT),
                 getResString(R.string.service_gui_SEND_LOGS_TITLE));
     }
+
+    public static Map<String, Object> getSubscriberConsoleMap()
+    {
+        return subscriberConsoleMap;
+    }
+
+    public static void setSubscriberConsoleMap(Map<String, Object> subscriberConsoleMap)
+    {
+        JitsiApplication.subscriberConsoleMap = subscriberConsoleMap;
+    }    
 }

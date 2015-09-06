@@ -33,7 +33,7 @@ public class AndroidConsoleHandler
     /**
      * Tag used for output(can be used to filter logcat).
      */
-    private final static String TAG = "Jitsi";
+    private final static String TAG = "ConsoleVoIPMedia";
 
     /**
      * Property indicates whether logger should translate logging levels to

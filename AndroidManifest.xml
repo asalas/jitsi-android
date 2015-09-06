@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.jitsi"
       android:versionCode="1"
-      android:versionName="0.1.0">
+      android:versionName="2.5.9">
     <application    android:label="@string/app_name"
-                    android:logo="@drawable/actionbaricon"
-                    android:icon="@drawable/logoblue"
+                    android:logo="@drawable/actionbaricon_console"
+                    android:icon="@drawable/logo_console"
                     android:theme="@style/JitsiTheme"
                     android:name=".android.JitsiApplication">
         <activity android:name=".android.gui.LauncherActivity"
@@ -77,7 +77,7 @@
                 />
         <activity android:name=".android.gui.call.CallContactActivity"
                     android:label="@string/app_name"
-                    android:icon="@drawable/actionbaricon"
+                    android:icon="@drawable/actionbaricon_console"
                     android:launchMode="singleTask">
             <intent-filter> 
                 <action android:name="android.intent.action.CALL" />

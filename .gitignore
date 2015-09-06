@@ -5,3 +5,4 @@ libs
 *.iws
 cache.properties
 local.properties
+/nbandroid/

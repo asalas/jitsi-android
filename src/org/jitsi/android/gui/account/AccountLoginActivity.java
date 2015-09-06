@@ -215,4 +215,14 @@ public class AccountLoginActivity
         }
 
     }
+
+    //TODO: cambios asalas
+    @Override
+    public void onLoginFailed()
+    {
+        AndroidUtils.showAlertDialog(
+                this,
+                R.string.service_gui_ERROR,
+                R.string.service_gui_ACCOUNT_CREATION_FAILED_WS);
+    }
 }

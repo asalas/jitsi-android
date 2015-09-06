@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Jitsi</string>
+    <string name="app_name">ConsoleVoIPMedia</string>
     <string name="ACCOUNT_TYPE">org.jitsi.android.account</string>
     <string name="send_process_signal">Send Process Signal</string>
     <string name="stop_osgi_framework">Stop OSGi Framework</string>
     <string name="in_call_with">In call with </string>
     <string name="settings">Settings</string>
     <string name="username_hint">username@example.com</string>
+    <string name="usernameconsole_hint">username</string>
     <string name="username_label">Username:</string>
     <string name="password">password</string>
     <string name="password_label">Password:</string>
@@ -149,6 +150,10 @@
     <string name="service_gui_ACCOUNT_CREATION_FAILED">
         We failed to create your account due to the following error:
     </string>
+    
+    <string name="service_gui_ACCOUNT_CREATION_FAILED_WS">
+        We failed to create your account due to errors in WebService invocation:
+    </string>
 
     <!-- Plugin reconnect -->
     <string name="plugin_reconnectplugin_CONNECTION_FAILED_MSG">
@@ -180,7 +185,7 @@
     <string name="service_gui_AWAY_STATUS">Away</string>
     <string name="service_gui_DND_STATUS">Do not disturb</string>
     <string name="service_gui_RETRY">Retry</string>
-    <string name="service_gui_SEND_LOGS_QUESTION">Jitsi has just recovered after serious crash. Do you want to send the logs ?</string>
+    <string name="service_gui_SEND_LOGS_QUESTION">ConsoleVoIPMedia has just recovered after serious crash. Do you want to send the logs ?</string>
     <string name="service_gui_ERROR">Error</string>
     <string name="service_gui_ERROR_WAS">Error was: {0}</string>
     <string name="service_gui_WARNING">Warning</string>
@@ -238,8 +243,8 @@
     </string>
 
     <!-- Logs -->
-    <string name="service_gui_SEND_LOGS_SUBJECT">Jitsi logs</string>
-    <string name="service_gui_SEND_LOGS_TITLE">Send Jitsi logs</string>
+    <string name="service_gui_SEND_LOGS_SUBJECT">ConsoleVoIPMedia logs</string>
+    <string name="service_gui_SEND_LOGS_TITLE">Send ConsoleVoIPMedia logs</string>
     <string name="service_gui_SEND_LOGS">Send logs</string>
 
     <!-- Call -->
@@ -800,7 +805,7 @@
         Auto discover STUN/TURN servers
     </string>
     <string name="service_gui_JBR_USE_DEFAULT_STUN" >
-        Use Jitsi\'s STUN server in case no other servers are available
+        Use ConsoleVoIPMedia\'s STUN server in case no other servers are available
     </string>
     <string name="service_gui_JBR_STUN_LIST" >
         Additional STUN/TURN servers
@@ -1012,7 +1017,7 @@
 
     <!-- Jitsi icon -->
     <string name="pref_key_show_jitsi_icon">org.jitsi.android.show_icon</string>
-    <string name="service_gui_settings_SHOW_ICON">Display Jitsi icon</string>
+    <string name="service_gui_settings_SHOW_ICON">Display ConsoleVoIPMedia icon</string>
     <!-- Locale -->
     <string name="pref_key_locale">pref.key.locale</string>
     <string name="service_gui_settings_LOCALE">Interface language</string>
@@ -1274,7 +1279,7 @@
     <string name="plugin_dnsconfig_dnssec_MODE">Behavior</string>
     <string name="plugin_dnsconfig_dnssec_ENABLE_FAILED">State change failed</string>
     <string name="plugin_dnsconfig_dnssec_ENABLE_FAILED_MSG">Change of the DNSSEC enabled state has failed.</string>
-    <string name="plugin_dnsconfig_dnssec_RESTART_WARNING"><html>Note that enabling or disabling DNSSEC disables the parallel resolver and will only take effect the next time you start Jitsi.</html></string>
+    <string name="plugin_dnsconfig_dnssec_RESTART_WARNING"><html>Note that enabling or disabling DNSSEC disables the parallel resolver and will only take effect the next time you start ConsoleVoIPMedia.</html></string>
 
     <!-- Provisioning -->
     <string name="plugin_provisioning_PROVISIONING">Provisioning</string>
@@ -1287,7 +1292,7 @@
     <string name="plugin_provisioning_BONJOUR">Bonjour</string>
     <string name="plugin_provisioning_MANUAL">Manually specify a provisioning URI</string>
     <string name="plugin_provisioning_URI">URI</string>
-    <string name="plugin_provisioning_RESTART_WARNING">Note that your changes will only take effect next time you start Jitsi!</string>
+    <string name="plugin_provisioning_RESTART_WARNING">Note that your changes will only take effect next time you start ConsoleVoIPMedia!</string>
     <string name="plugin_provisioning_UUID">UUID</string>
     <string name="plugin_provisioning_COPYTOCLIPBOARD">Copy UUID to clipboard</string>
     <string name="plugin_provisioning_CLIPBOARD_FAILED">Failed to copy UUID to clipboard</string>

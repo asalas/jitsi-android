@@ -24,6 +24,9 @@ import net.java.sip.communicator.service.gui.*;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.jabber.*;
 import net.java.sip.communicator.util.*;
+import net.voipmedia.SubscriberConsole;
+
+import org.jitsi.android.JitsiApplication;
 
 import org.osgi.framework.*;
 
@@ -111,6 +114,21 @@ public class AccountRegistrationImpl
         String protocolIconPath = getProtocolIconPath();
 
         String accountIconPath = getAccountIconPath();
+
+        // TODO: cambios asalas
+        final Map<String, Object> subscriberConsoleMap = JitsiApplication.getSubscriberConsoleMap();
+        if (subscriberConsoleMap != null && !subscriberConsoleMap.isEmpty())
+        {
+            final String pbxHostIpName = subscriberConsoleMap.get(SubscriberConsole.PBX_HOST).toString();
+            final String _userName = subscriberConsoleMap.get(SubscriberConsole.USER_NAME).toString();
+            final String domain = subscriberConsoleMap.get(SubscriberConsole.DOMAIN).toString();
+            
+            accountProperties.put(ProtocolProviderFactory.IS_SERVER_OVERRIDDEN, "true");
+            accountProperties.put(ProtocolProviderFactory.SERVER_ADDRESS, pbxHostIpName);
+            accountProperties.put(ProtocolProviderFactory.IS_CALLING_DISABLED_FOR_ACCOUNT, "true");
+            
+            userName = _userName+"@"+domain;
+        }
 
         registration.storeProperties(
                 userName, passwd,

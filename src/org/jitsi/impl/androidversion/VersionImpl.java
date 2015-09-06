@@ -32,7 +32,7 @@ public class VersionImpl
     /**
      * Default application name.
      */
-    private static final String DEFAULT_APPLICATION_NAME = "Jitsi";
+    private static final String DEFAULT_APPLICATION_NAME = "ConsleVoIPMedia";
 
     /**
      * The name of this application.

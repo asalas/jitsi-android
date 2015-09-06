@@ -20,6 +20,7 @@ package org.jitsi.android.gui.account;
 import java.util.*;
 
 import net.java.sip.communicator.service.protocol.*;
+import net.voipmedia.SubscriberConsole;
 
 import org.jitsi.*;
 import org.jitsi.android.gui.util.*;
@@ -32,6 +33,13 @@ import android.app.*;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import org.apache.http.Header;
+import org.jitsi.android.JitsiApplication;
+import org.jitsi.service.libjitsi.LibJitsi;
+import org.json.JSONObject;
 
 /**
  * The <tt>AccountLoginFragment</tt> is used for creating new account, but can
@@ -59,6 +67,24 @@ public class AccountLoginFragment
      * login and password.
      */
     private AccountLoginListener loginListener;
+    
+    // TODO: cambios asalas
+    private static final String RESPONSE_OK = "OK";
+
+    private String AUTH_USER;
+    private String AUTH_PASSWORD;
+    private String PATH_GET_SUBSCRIBER;
+
+    private AsyncHttpClient restClient;
+    private RequestParams restRequestParams;
+
+    private Map<String, Object> subscriberConsoleMap;
+
+    private ProgressDialog progressDialog;
+
+    // Constants for selected networks
+    private static final String SIP_NETWORK = "SIP";
+    private static final String JABBER_NETWORK = "Jabber";
 
     /**
      * {@inheritDoc}
@@ -70,6 +96,11 @@ public class AccountLoginFragment
 
         if(activity instanceof AccountLoginListener)
         {
+            this.progressDialog = new ProgressDialog(activity);
+            this.progressDialog.setTitle("Authenticating ...");
+            this.progressDialog.setMessage("Please wait to response from ConsoleVoIPMedia");
+            this.progressDialog.setCancelable(false);
+            
             this.loginListener = (AccountLoginListener)activity;
         }
         else
@@ -98,7 +129,7 @@ public class AccountLoginFragment
     {
         View content = inflater.inflate(R.layout.new_account, container, false);
 
-        Spinner spinner = (Spinner) content.findViewById(R.id.networkSpinner);
+//        Spinner spinner = (Spinner) content.findViewById(R.id.networkSpinner);
 
         ArrayAdapter<CharSequence> adapter
                 = ArrayAdapter.createFromResource(
@@ -107,7 +138,7 @@ public class AccountLoginFragment
                         R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(R.layout.dropdown_spinner_item);
 
-        spinner.setAdapter(adapter);
+//        spinner.setAdapter(adapter);
 
         initSignInButton(content);
 
@@ -147,26 +178,88 @@ public class AccountLoginFragment
         {
             public void onClick(View v)
             {
-                final Spinner spinner
-                    = (Spinner) content.findViewById(R.id.networkSpinner);
                 final EditText userNameField
                     = (EditText) content.findViewById(R.id.usernameField);
                 final EditText passwordField
                     = (EditText) content.findViewById(R.id.passwordField);
 
-                // Translate network label to network value
-                String[] networkValues
-                        = getResources().getStringArray(
-                                R.array.networks_array_values);
-                String selectedNetwork
-                        = networkValues[spinner.getSelectedItemPosition()];
+                // TODO: cambios asalas
+                progressDialog.show();
 
-                String login = userNameField.getText().toString();
-                String password = passwordField.getText().toString();
+                final String login = userNameField.getText().toString();
+                final String password = passwordField.getText().toString();
 
-                loginListener.onLoginPerformed(login,
-                                               password,
-                                               selectedNetwork);
+                // Invoke the WS ConsoleVoIPMedia/REST
+                AUTH_USER = LibJitsi.getConfigurationService().getString("net.voipmedia.console.auth.user");
+                AUTH_PASSWORD = LibJitsi.getConfigurationService().getString("net.voipmedia.console.auth.password");
+                PATH_GET_SUBSCRIBER = LibJitsi.getConfigurationService().getString("net.voipmedia.console.path.get.subscriber");
+
+                restRequestParams = new RequestParams();
+                restRequestParams.put("username", login);
+                restRequestParams.put("password", password);
+
+                restClient = new AsyncHttpClient();
+                restClient.setTimeout(4000);                
+                restClient.setBasicAuth(AUTH_USER, AUTH_PASSWORD);
+                restClient.setAuthenticationPreemptive(true);                
+                
+                JitsiApplication.setSubscriberConsoleMap(null);
+                
+                restClient.get(PATH_GET_SUBSCRIBER, restRequestParams, new JsonHttpResponseHandler()
+                {
+                    @Override
+                    public void onSuccess(int i, Header[] headers, JSONObject response)
+                    {
+                        // Hide the Progress Dialog
+                        progressDialog.hide();
+                        try
+                        {
+                            String statusCode = response.getString("statusCode");
+                            if (statusCode.equals(RESPONSE_OK))
+                            {
+                                JSONObject jsonSubscriber = response.getJSONObject("subscriber");
+                                subscriberConsoleMap = new HashMap<String, Object>();
+                                subscriberConsoleMap.put(SubscriberConsole.USER_NAME, jsonSubscriber.getString(SubscriberConsole.USER_NAME));
+                                subscriberConsoleMap.put(SubscriberConsole.DOMAIN, jsonSubscriber.getString(SubscriberConsole.DOMAIN));
+                                subscriberConsoleMap.put(SubscriberConsole.PASSWORD, jsonSubscriber.getString(SubscriberConsole.PASSWORD));
+                                subscriberConsoleMap.put(SubscriberConsole.USER_ID_CONSOLE, jsonSubscriber.getInt(SubscriberConsole.USER_ID_CONSOLE));
+                                subscriberConsoleMap.put(SubscriberConsole.PBX_HOST, jsonSubscriber.getString(SubscriberConsole.PBX_HOST));
+                                subscriberConsoleMap.put(SubscriberConsole.HA1B, jsonSubscriber.getBoolean(SubscriberConsole.HA1B));
+                            }
+                            if (subscriberConsoleMap != null)
+                            {
+                                JitsiApplication.setSubscriberConsoleMap(subscriberConsoleMap);
+                                
+                                final String _userName = subscriberConsoleMap.get(SubscriberConsole.USER_NAME).toString();
+                                final String _pbxHostIpName = subscriberConsoleMap.get(SubscriberConsole.PBX_HOST).toString();
+                                final String _login = _userName+"@"+_pbxHostIpName;
+                                final String _password = subscriberConsoleMap.get(SubscriberConsole.PASSWORD).toString();
+
+                                // register SIP account
+                                loginListener.onLoginPerformed(_login, _password, SIP_NETWORK);
+
+                                // register Jabber account
+                                loginListener.onLoginPerformed(_login, _password, JABBER_NETWORK);
+                            }
+                            else
+                            {
+                                loginListener.onLoginFailed();
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            loginListener.onLoginFailed();
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable)
+                    {
+                        // Hide the Progress Dialog
+                        progressDialog.hide();
+                        loginListener.onLoginFailed();
+                    }
+                });
             }
         });
     }
@@ -260,5 +353,6 @@ public class AccountLoginFragment
         public void onLoginPerformed( String login,
                                       String password,
                                       String network);
+        public void onLoginFailed();
     }
 }

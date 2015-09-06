@@ -24,6 +24,9 @@ import net.java.sip.communicator.service.gui.*;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.sip.*;
 import net.java.sip.communicator.util.Logger;
+import net.voipmedia.SubscriberConsole;
+
+import org.jitsi.android.JitsiApplication;
 
 import org.osgi.framework.*;
 
@@ -98,11 +101,28 @@ public class AccountRegistrationImpl
             String passwd)
         throws OperationFailedException
     {
-        HashMap<String, String> accountProperties
-                = new HashMap<String, String>();
+        HashMap<String, String> accountProperties = new HashMap<String, String>();
 
         String protocolIconPath = getProtocolIconPath();
         String accountIconPath = getAccountIconPath();
+
+        // TODO: cambios asalas
+        final Map<String, Object> subscriberConsoleMap = JitsiApplication.getSubscriberConsoleMap();
+        if (subscriberConsoleMap != null && !subscriberConsoleMap.isEmpty())
+        {
+            final String subscriberUserName = subscriberConsoleMap.get(SubscriberConsole.USER_NAME).toString();
+            final String subscriberDomain = subscriberConsoleMap.get(SubscriberConsole.DOMAIN).toString();
+            final String authorizationName = subscriberUserName+"@"+subscriberDomain;
+
+            accountProperties.put(ProtocolProviderFactory.SERVER_PORT, "5060");
+            accountProperties.put(ProtocolProviderFactory.AUTHORIZATION_NAME, authorizationName);
+            accountProperties.put(ProtocolProviderFactory.PROXY_AUTO_CONFIG, "false");
+            accountProperties.put(ProtocolProviderFactory.PROXY_ADDRESS, subscriberConsoleMap.get(SubscriberConsole.PBX_HOST).toString());
+            accountProperties.put(ProtocolProviderFactory.PROXY_PORT, "5060");
+            accountProperties.put(ProtocolProviderFactory.PREFERRED_TRANSPORT, "TCP");
+            accountProperties.put(ProtocolProviderFactory.KEEP_ALIVE_METHOD, "REGISTER");
+            accountProperties.put(ProtocolProviderFactory.KEEP_ALIVE_INTERVAL, "59");
+        }
 
         registration.storeProperties(
                 userName, passwd,

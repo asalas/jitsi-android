@@ -196,7 +196,7 @@ public class OSGiServiceImpl
 
                 name = info.name;
                 if ((name == null) || (name.length() == 0))
-                    name = "Jitsi";
+                    name = "ConsoleVoIPMedia";
             }
 
             System.setProperty(
