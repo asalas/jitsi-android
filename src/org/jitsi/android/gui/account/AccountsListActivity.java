@@ -127,6 +127,7 @@ public class AccountsListActivity
     {
         super.onCreateOptionsMenu(menu);
 
+        // TODO: aqui habria que comentarlo
         getMenuInflater().inflate(R.menu.account_settings_menu, menu);
 
         return true;

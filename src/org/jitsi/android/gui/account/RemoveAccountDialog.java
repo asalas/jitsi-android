@@ -17,18 +17,19 @@
  */
 package org.jitsi.android.gui.account;
 
-import android.app.*;
-import android.content.*;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 
-import net.java.sip.communicator.service.protocol.*;
-import net.java.sip.communicator.util.account.*;
+import net.java.sip.communicator.service.protocol.AccountID;
+import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
+import net.java.sip.communicator.util.account.AccountUtils;
 
-import org.jitsi.*;
-import org.jitsi.android.gui.*;
-import org.jitsi.service.configuration.*;
+import org.jitsi.R;
+import org.jitsi.android.gui.AndroidGUIActivator;
+import org.jitsi.service.configuration.ConfigurationService;
 
-import java.util.*;
-
+import java.util.List;
 /**
  * Helper class that produces "remove account dialog". It asks the user for
  * account removal confirmation and finally removes the account.
@@ -39,19 +40,16 @@ import java.util.*;
  */
 public class RemoveAccountDialog
 {
-    public static AlertDialog create(Context ctx,
-                                     final AccountID account,
-                                     final OnAccountRemovedListener listener)
+    public static AlertDialog create(Context ctx, final AccountID account, final OnAccountRemovedListener listener)
     {
+        String ctxMessage = ctx.getString(R.string.service_gui_REMOVE_ACCOUNT_MESSAGE, account.getDisplayName());
+
         AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
         return alert
                 .setTitle(R.string.service_gui_REMOVE_ACCOUNT)
-                .setMessage(
-                        ctx.getString(
-                                R.string.service_gui_REMOVE_ACCOUNT_MESSAGE,
-                                account.getDisplayName()))
+                .setMessage(ctxMessage)
                 .setPositiveButton(R.string.service_gui_YES,
-                                   new DialogInterface.OnClickListener()
+                   new DialogInterface.OnClickListener()
                    {
                        @Override
                        public void onClick(DialogInterface dialog, int which)
@@ -60,7 +58,7 @@ public class RemoveAccountDialog
                        }
                    })
                 .setNegativeButton(R.string.service_gui_NO,
-                                   new DialogInterface.OnClickListener()
+                   new DialogInterface.OnClickListener()
                    {
                        @Override
                        public void onClick(
@@ -72,9 +70,7 @@ public class RemoveAccountDialog
                    }).create();
     }
 
-    private static void onRemoveClicked(final DialogInterface dialog,
-                                        final AccountID account,
-                                        final OnAccountRemovedListener l)
+    private static void onRemoveClicked(final DialogInterface dialog, final AccountID account, final OnAccountRemovedListener listener)
     {
         // Fix "network on main thread"
         final Thread removeAccountThread = new Thread()
@@ -91,7 +87,7 @@ public class RemoveAccountDialog
             // Simply block UI thread as it shouldn't take too long to uninstall
             removeAccountThread.join();
             // Notify about results
-            l.onAccountRemoved(account);
+            listener.onAccountRemoved(account);
             dialog.dismiss();
         }
         catch (InterruptedException e)
@@ -107,8 +103,7 @@ public class RemoveAccountDialog
     private static void removeAccount(AccountID accountID)
     {
         ProtocolProviderFactory providerFactory =
-                AccountUtils.getProtocolProviderFactory(
-                        accountID.getProtocolName());
+                AccountUtils.getProtocolProviderFactory(accountID.getProtocolName());
 
         ConfigurationService configService
                 = AndroidGUIActivator.getConfigurationService();
@@ -133,7 +128,9 @@ public class RemoveAccountDialog
                 = providerFactory.uninstallAccount(accountID);
 
         if (!isUninstalled)
+        {
             throw new RuntimeException("Failed to uninstall account");
+        }
     }
 
     /**
@@ -150,5 +147,4 @@ public class RemoveAccountDialog
          */
         void onAccountRemoved(AccountID accountID);
     }
-
 }
