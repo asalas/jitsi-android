@@ -218,11 +218,20 @@ public class AccountLoginFragment
                             if (statusCode.equals(RESPONSE_OK))
                             {
                                 JSONObject jsonSubscriber = response.getJSONObject("subscriber");
+                                int userIdConsole;
+                                try
+                                {
+                                    userIdConsole = jsonSubscriber.getInt(SubscriberConsole.USER_ID_CONSOLE);
+                                }
+                                catch(Exception e)
+                                {
+                                    userIdConsole = 0;
+                                }
                                 subscriberConsoleMap = new HashMap<String, Object>();
                                 subscriberConsoleMap.put(SubscriberConsole.USER_NAME, jsonSubscriber.getString(SubscriberConsole.USER_NAME));
                                 subscriberConsoleMap.put(SubscriberConsole.DOMAIN, jsonSubscriber.getString(SubscriberConsole.DOMAIN));
                                 subscriberConsoleMap.put(SubscriberConsole.PASSWORD, jsonSubscriber.getString(SubscriberConsole.PASSWORD));
-                                subscriberConsoleMap.put(SubscriberConsole.USER_ID_CONSOLE, jsonSubscriber.getInt(SubscriberConsole.USER_ID_CONSOLE));
+                                subscriberConsoleMap.put(SubscriberConsole.USER_ID_CONSOLE, userIdConsole);
                                 subscriberConsoleMap.put(SubscriberConsole.PBX_HOST, jsonSubscriber.getString(SubscriberConsole.PBX_HOST));
                                 subscriberConsoleMap.put(SubscriberConsole.HA1B, jsonSubscriber.getBoolean(SubscriberConsole.HA1B));
                             }
